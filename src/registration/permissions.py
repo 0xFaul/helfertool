@@ -23,6 +23,8 @@ ACCESS_JOB_VIEW_HELPERS = "JOB_VIEW_HELPERS"  # view helpers of job
 ACCESS_HELPER_EDIT = "HELPER_EDIT"  # edit the personal data of a helper
 ACCESS_HELPER_VIEW = "HELPER_VIEW"  # view the personal data of a helper
 
+ACCESS_INVENTORY_EDIT = "INVENTORY_EDIT"  # edit inventory settings for an event
+ACCESS_INVENTORY_HANDLE = "INVENTORY_HANDLE"  # register and take back inventory
 
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
@@ -82,6 +84,17 @@ _rbac_matrix = {
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
         EventAdminRoles.ROLE_FRONTDESK,
+        EventAdminRoles.ROLE_INVENTORY,
+    ],
+
+    ACCESS_INVENTORY_EDIT: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
+    ACCESS_INVENTORY_HANDLE: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
         EventAdminRoles.ROLE_INVENTORY,
     ],
 }
