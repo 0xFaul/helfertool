@@ -26,6 +26,10 @@ ACCESS_HELPER_VIEW = "HELPER_VIEW"  # view the personal data of a helper
 ACCESS_INVENTORY_EDIT = "INVENTORY_EDIT"  # edit inventory settings for an event
 ACCESS_INVENTORY_HANDLE = "INVENTORY_HANDLE"  # register and take back inventory
 
+ACCESS_BADGES_EDIT = "BADGES_EDIT"  # edit badge settings for an event
+ACCESS_BADGES_EDIT_HELPER = "BADGES_EDIT_HELPER"  # edit badges of single helpers
+ACCESS_BADGES_GENERATE = "BADGES_GENERATE"  # generate and register badges
+
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
 _rbac_matrix = {
@@ -89,13 +93,27 @@ _rbac_matrix = {
 
     ACCESS_INVENTORY_EDIT: [
         EventAdminRoles.ROLE_ADMIN,
-        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
     ],
 
     ACCESS_INVENTORY_HANDLE: [
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
         EventAdminRoles.ROLE_INVENTORY,
+    ],
+
+    ACCESS_BADGES_EDIT: [
+        EventAdminRoles.ROLE_ADMIN,
+    ],
+
+    ACCESS_BADGES_EDIT_HELPER: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
+    ACCESS_BADGES_GENERATE: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+        EventAdminRoles.ROLE_BADGES,
     ],
 }
 
@@ -142,7 +160,7 @@ def has_access_job(user, job, access):
         return True
     
     # handle job admins
-    if _check_job_role(user, shift.job, access):
+    if _check_job_role(user, job, access):
         return True
     
     return False
