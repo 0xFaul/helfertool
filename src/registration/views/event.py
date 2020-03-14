@@ -16,25 +16,22 @@ from ..decorators import archived_not_available
 from ..forms import EventForm, EventAdminRolesForm, EventAdminRolesAddForm, EventDeleteForm, EventArchiveForm, \
     EventDuplicateForm
 from ..models import Event, EventAdminRoles
+from ..permissions import has_access, ACCESS_EVENT_EDIT
 
 
 @login_required
 def edit_event(request, event_url_name=None):
-    # TODO shorten
+    event = None
+
     # check permission
     if event_url_name:
-        # event exists -> superuser or admin
-        if not is_admin(request.user, event_url_name):
+        event = get_object_or_404(Event, url_name=event_url_name)
+        if not has_access(request.user, event, ACCESS_EVENT_EDIT):
             return nopermission(request)
     else:
         # event will be created -> superuser or addevent group
         if not (request.user.is_superuser or has_addevent_group(request.user)):
-            return nopermission(request)
-
-    # get event
-    event = None
-    if event_url_name:
-        event = get_object_or_404(Event, url_name=event_url_name)
+            return nopermission(request)     
 
     # handle form
     form = EventForm(request.POST or None, request.FILES or None,
@@ -85,7 +82,7 @@ def edit_event_admins(request, event_url_name=None):
     event = get_object_or_404(Event, url_name=event_url_name)
 
     # check permission
-    if not event.is_admin(request.user):
+    if not has_access(request.user, event, ACCESS_EVENT_EDIT):
         return nopermission(request)
   
     # one form per existing admin (differentiated by prefix)
@@ -130,7 +127,7 @@ def delete_event(request, event_url_name):
     event = get_object_or_404(Event, url_name=event_url_name)
 
     # check permission
-    if not event.is_admin(request.user):
+    if not has_access(request.user, event, ACCESS_EVENT_EDIT):
         return nopermission(request)
 
     # form
@@ -162,7 +159,7 @@ def archive_event(request, event_url_name):
     event = get_object_or_404(Event, url_name=event_url_name)
 
     # check permission
-    if not event.is_admin(request.user):
+    if not has_access(request.user, event, ACCESS_EVENT_EDIT):
         return nopermission(request)
 
     # form
@@ -190,7 +187,7 @@ def duplicate_event(request, event_url_name):
     event = get_object_or_404(Event, url_name=event_url_name)
 
     # check permission
-    if not event.is_admin(request.user):
+    if not has_access(request.user, event, ACCESS_EVENT_EDIT):
         return nopermission(request)
 
     # form

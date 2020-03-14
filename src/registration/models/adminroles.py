@@ -5,10 +5,23 @@ from django.utils.translation import ugettext_lazy as _
 from multiselectfield import MultiSelectField
 
 from .event import Event
-from ..permissions import ROLE_CHOICES, ROLE_ADMIN
 
 
 class EventAdminRoles(models.Model):
+    ROLE_ADMIN = 'ADMIN'
+    ROLE_RESTRICTED_ADMIN = 'RESTRICTED_ADMIN'
+    ROLE_FRONTDESK = 'FRONTDESK'
+    ROLE_INVENTORY = 'INVENTORY'
+    ROLE_BADGES = 'BADGES'
+
+    ROLE_CHOICES = (
+        (ROLE_ADMIN, _('Administrator')),
+        (ROLE_RESTRICTED_ADMIN, _('Restricted administrator')),
+        (ROLE_FRONTDESK, _('Front desk')),
+        (ROLE_INVENTORY, _('Inventory')),
+        (ROLE_BADGES, _('Badges')),
+    )
+
     class Meta:
         unique_together = ['event', 'user', ]
         

@@ -81,7 +81,7 @@
 
             {% if job_admin and not event.archived%}
                 <p>
-                    <a href="{% url 'helpers' event.url_name job.pk %}">
+                    <a href="{% url 'helpers_for_job' event.url_name job.pk %}">
                     {% icon "info-circle" %}
                     {% trans "Show" %}</a>
                 </p>
