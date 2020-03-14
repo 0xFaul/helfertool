@@ -1,0 +1,33 @@
+{% extends "helfertool/admin.html" %}
+{% load i18n bootstrap4 translation %}
+
+{% block admincontent %}
+    <h2>{% trans "Event permissions" %}</h2>
+
+    <form action="" method="post">
+        {% csrf_token %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" width="60%">{% trans "User" %}</th>
+                    <th scope="col" width="40%">{% trans "Roles" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for form in forms %}
+                <tr>
+                    <td>{{ form.instance.user.get_full_name }} ({{ form.instance.user.username }})</td>
+                    <td>{% bootstrap_field form.roles show_label=false %}</td>
+            {% endfor %}
+
+            <tr>
+                <td>{% bootstrap_field add_form.user show_label=false %}</td>
+                <td>{% bootstrap_field add_form.roles show_label=false %}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <input type="submit" value="{% trans "Save" %}" class="btn btn-outline-primary" />
+    </form>
+{% endblock %}

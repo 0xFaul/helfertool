@@ -64,6 +64,10 @@ urlpatterns = [
         views.edit_event,
         name='edit_event'),
 
+    url(r'^(?P<event_url_name>[a-zA-Z0-9]+)/edit/admins/$',
+        views.edit_event_admins,
+        name='edit_event_admins'),
+
     url(r'^(?P<event_url_name>[a-zA-Z0-9]+)/delete/$',
         views.delete_event,
         name='delete_event'),

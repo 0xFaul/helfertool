@@ -76,6 +76,10 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'edit_event_admins' event.url_name %}">{% trans "Event permissions" %}</a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'jobs_and_shifts' event.url_name %}">{% trans "Jobs and shifts" %}</a>
                         </li>
 

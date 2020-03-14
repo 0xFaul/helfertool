@@ -168,6 +168,7 @@ class Event(models.Model):
     admins = models.ManyToManyField(
         User,
         blank=True,
+        through='registration.EventAdminRoles'
     )
 
     active = models.BooleanField(

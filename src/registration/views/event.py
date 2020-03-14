@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
 
 import logging
@@ -13,8 +13,9 @@ from account.templatetags.permissions import has_addevent_group
 from .utils import is_admin, nopermission
 
 from ..decorators import archived_not_available
-from ..forms import EventForm, EventDeleteForm, EventArchiveForm, EventDuplicateForm
-from ..models import Event
+from ..forms import EventForm, EventAdminRolesForm, EventAdminRolesAddForm, EventDeleteForm, EventArchiveForm, \
+    EventDuplicateForm
+from ..models import Event, EventAdminRoles
 
 
 @login_required
@@ -77,6 +78,51 @@ def edit_event(request, event_url_name=None):
     context = {'event': saved_event,
                'form': form}
     return render(request, 'registration/admin/edit_event.html', context)
+
+
+@login_required
+def edit_event_admins(request, event_url_name=None):
+    event = get_object_or_404(Event, url_name=event_url_name)
+
+    # check permission
+    if not event.is_admin(request.user):
+        return nopermission(request)
+  
+    # one form per existing admin (differentiated by prefix)
+    all_forms = []
+    event_admin_roles = EventAdminRoles.objects.filter(event=event)
+    for event_admin in event_admin_roles:
+        form = EventAdminRolesForm(request.POST or None,
+                                   instance=event_admin,
+                                   prefix='user_{}'.format(event_admin.user.pk))
+        all_forms.append(form)
+
+    # another form to add one new admin
+    add_form = EventAdminRolesAddForm(request.POST or None, prefix='add', event=event)
+
+    # we got a post request -> save
+    if request.POST and all_forms:
+        # remove users without any role from admins (no roles = invalid forms)
+        valid_forms = []
+        for form in all_forms:
+            if form.is_valid():
+                valid_forms.append(form)
+            else:
+                form.instance.delete()
+
+        # save every other form
+        for form in valid_forms:
+            form.save()
+
+        # and save the form for a new admin
+        if add_form.is_valid():
+            add_form.save()
+            return redirect('edit_event_admins', event_url_name=event_url_name)
+
+    context = {'event': event,
+               'forms': all_forms,
+               'add_form': add_form}
+    return render(request, 'registration/admin/edit_event_admins.html', context)
 
 
 @login_required
