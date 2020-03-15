@@ -192,9 +192,16 @@ def has_access(user, resource, access):
 
 
 def has_access_event_or_job(user, event, access_event, access_job):
+    """
+    Checks whether the user has access to the event with the specified `access_event`
+    or to any job of the event with `access_job`.
+
+    `access_event` can be `None`.
+    """
     # check event
-    if has_access(user, event, access_event):
-        return True
+    if access_event:
+        if has_access(user, event, access_event):
+            return True
 
     # check jobs
     for job in event.job_set.all():
@@ -257,7 +264,7 @@ def _check_event_role(user, event, access):
     try:
         admin_roles = EventAdminRoles.objects.get(event=event, user=user).roles
     except EventAdminRoles.DoesNotExist:
-        return FalseEvent
+        return False
 
     # get required roles for this access type
     try:

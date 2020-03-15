@@ -1,32 +1,32 @@
 {% extends "helfertool/base.html" %}
-{% load staticfiles i18n bootstrap4 icons globalpermissions inventory %}
+{% load staticfiles i18n bootstrap4 icons globalpermissions permissions inventory %}
 
 {% block adminheader %}
-        {# select2 #}
-        <link href="{% static "helfertool/vendor/select2/css/select2.min.css" %}" rel="stylesheet" />
-        <script src="{% static "helfertool/vendor/select2/js/select2.min.js" %}"></script>
-        {% get_current_language as LANGUAGE_CODE %}
-        <script src="{% static "helfertool/vendor/select2/js/i18n/" %}{{ LANGUAGE_CODE }}.js"></script>
+    {# select2 #}
+    <link href="{% static "helfertool/vendor/select2/css/select2.min.css" %}" rel="stylesheet" />
+    <script src="{% static "helfertool/vendor/select2/js/select2.min.js" %}"></script>
+    {% get_current_language as LANGUAGE_CODE %}
+    <script src="{% static "helfertool/vendor/select2/js/i18n/" %}{{ LANGUAGE_CODE }}.js"></script>
 
-        {# django-select2 #}
-        <script src="{% static "django_select2/django_select2.js" %}"></script>
+    {# django-select2 #}
+    <script src="{% static "django_select2/django_select2.js" %}"></script>
 
-        {# ckeditor #}
-        <script src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-        <script src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    {# ckeditor #}
+    <script src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 
-        {# chart.js #}
-        <script src="{% static "helfertool/vendor/momentjs/moment.min.js" %}"></script>
-        <script src="{% static "helfertool/vendor/chart.js/Chart.min.js" %}"></script>
-        <link href="{% static "helfertool/vendor/chart.js/Chart.min.css" %}" rel="stylesheet" />
+    {# chart.js #}
+    <script src="{% static "helfertool/vendor/momentjs/moment.min.js" %}"></script>
+    <script src="{% static "helfertool/vendor/chart.js/Chart.min.js" %}"></script>
+    <link href="{% static "helfertool/vendor/chart.js/Chart.min.css" %}" rel="stylesheet" />
 
-        {# datatables #}
-        <link href="{% static "helfertool/vendor/datatables/css/dataTables.bootstrap4.min.css" %}" rel="stylesheet">
-        <link href="{% static "helfertool/vendor/datatables/css/responsive.bootstrap4.min.css" %}" rel="stylesheet">
-        <script src="{% static "helfertool/vendor/datatables/js/jquery.dataTables.min.js" %}"></script>
-        <script src="{% static "helfertool/vendor/datatables/js/dataTables.bootstrap4.min.js" %}"></script>
-        <script src="{% static "helfertool/vendor/datatables/js/dataTables.responsive.min.js" %}"></script>
-        <script src="{% static "helfertool/vendor/datatables/js/responsive.bootstrap4.min.js" %}"></script>
+    {# datatables #}
+    <link href="{% static "helfertool/vendor/datatables/css/dataTables.bootstrap4.min.css" %}" rel="stylesheet">
+    <link href="{% static "helfertool/vendor/datatables/css/responsive.bootstrap4.min.css" %}" rel="stylesheet">
+    <script src="{% static "helfertool/vendor/datatables/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "helfertool/vendor/datatables/js/dataTables.bootstrap4.min.js" %}"></script>
+    <script src="{% static "helfertool/vendor/datatables/js/dataTables.responsive.min.js" %}"></script>
+    <script src="{% static "helfertool/vendor/datatables/js/responsive.bootstrap4.min.js" %}"></script>
 {% endblock %}
 
 {% block title %}
@@ -40,9 +40,6 @@
 {% endblock %}
 
 {% block content %}
-    {% is_involved event as involved %}
-    {% is_admin event as admin %}
-
     {% if event and event.archived %}
         <div class="alert alert-info" role="alert">
             {% trans "This event is archived." %}
@@ -60,6 +57,7 @@
     <div class="row">
         <div class="col-md-3 wrap sidebar">
             {# for event #}
+            {% is_involved event as involved %}
             {% if event and involved %}
                 <h2>{% trans "General" %}</h2>
                 <ul class="nav flex-column">
@@ -70,23 +68,21 @@
                         </a>
                     </li>
 
-                    {% if admin %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'edit_event' event.url_name %}">{% trans "Edit event" %}</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edit_event' event.url_name %}">{% trans "Edit event" %}</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'edit_event_admins' event.url_name %}">{% trans "Event permissions" %}</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edit_event_admins' event.url_name %}">{% trans "Event permissions" %}</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'jobs_and_shifts' event.url_name %}">{% trans "Jobs and shifts" %}</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'jobs_and_shifts' event.url_name %}">{% trans "Jobs and shifts" %}</a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'links' event.url_name %}">{% trans "Links" %}</a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'links' event.url_name %}">{% trans "Links" %}</a>
+                    </li>
                 </ul>
 
                 <h2>{% trans "Helpers" %}</h2>
@@ -114,11 +110,9 @@
                             <a class="nav-link" href="{% url 'search_helper' event.url_name %}">{% trans "Search helper" %}</a>
                         </li>
 
-                        {% if admin %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'duplicates' event.url_name %}">{% trans "Duplicates" %}</a>
-                            </li>
-                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'duplicates' event.url_name %}">{% trans "Duplicates" %}</a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'coordinators' event.url_name %}">{% trans "All coordinators" %}</a>
@@ -140,25 +134,21 @@
                 </ul>
 
                 {% if not event.archived %}
-                    {% if admin or event.ask_shirt %}
-                        <h2>{% trans "Statistics" %}</h2>
-                        <ul class="nav flex-column">
-                            {% if admin %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'statistic:overview' event.url_name %}">{% trans "Overview" %}</a>
-                                </li>
-                            {% endif %}
+                    <h2>{% trans "Statistics" %}</h2>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'statistic:overview' event.url_name %}">{% trans "Overview" %}</a>
+                        </li>
 
-                            {% if event.ask_shirt %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'statistic:shirts' event.url_name %}">{% trans "T-Shirts" %}</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
+                        {% if event.ask_shirt %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'statistic:shirts' event.url_name %}">{% trans "T-Shirts" %}</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 {% endif %}
 
-                {% if admin and event.gifts %}
+                {% if event.gifts %}
                     <h2>{% trans "Gifts" %}</h2>
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -179,7 +169,7 @@
                     </ul>
                 {% endif %}
 
-                {% if admin and event.badges %}
+                {% if event.badges %}
                     <h2>{% trans "Badges" %}</h2>
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -200,7 +190,7 @@
                     </ul>
                 {% endif %}
 
-                {% if admin and event.inventory and not event.archived %}
+                {% if event.inventory and not event.archived %}
                     <h2>{% trans "Inventory" %}</h2>
                     <ul class="nav flex-column">
                         <li class="nav-item">

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
-from registration.decorators import archived_not_available, admin_required
+from registration.decorators import archived_not_available
 from registration.models import Event, Helper
 from registration.permissions import has_access, ACCESS_INVENTORY_HANDLE
 from registration.views.utils import nopermission

@@ -10,7 +10,7 @@ logger = logging.getLogger("helfertool")
 
 from account.templatetags.globalpermissions import has_addevent_group
 
-from .utils import is_admin, nopermission
+from .utils import nopermission
 
 from ..decorators import archived_not_available
 from ..forms import EventForm, EventAdminRolesForm, EventAdminRolesAddForm, EventDeleteForm, EventArchiveForm, \
@@ -98,7 +98,7 @@ def edit_event_admins(request, event_url_name=None):
     add_form = EventAdminRolesAddForm(request.POST or None, prefix='add', event=event)
 
     # we got a post request -> save
-    if request.POST and all_forms:
+    if request.POST and (all_forms or add_form.is_valid()):
         # remove users without any role from admins (no roles = invalid forms)
         valid_forms = []
         for form in all_forms:

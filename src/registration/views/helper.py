@@ -13,8 +13,9 @@ from ..forms import HelperForm, HelperDeleteForm, \
     HelperDeleteCoordinatorForm, RegisterForm, HelperAddShiftForm, \
     HelperAddCoordinatorForm, HelperSearchForm, HelperResendMailForm
 from ..decorators import archived_not_available
-from ..permissions import has_access, ACCESS_INVOLVED, ACCESS_JOB_EDIT_HELPERS, ACCESS_JOB_VIEW_HELPERS, \
-    ACCESS_HELPER_EDIT, ACCESS_HELPER_VIEW
+from ..permissions import has_access, has_access_event_or_job, ACCESS_INVOLVED, ACCESS_JOB_EDIT_HELPERS, \
+    ACCESS_JOB_VIEW_HELPERS, ACCESS_HELPER_EDIT, ACCESS_HELPER_VIEW, ACCESS_BADGES_EDIT_HELPER, ACCESS_GIFTS_HANDLE, \
+    ACCESS_EVENT_EXPORT_HELPERS
 
 from gifts.forms import HelpersGiftsForm
 
@@ -29,6 +30,8 @@ def helpers(request, event_url_name):
     # check permission
     if not has_access(request.user, event, ACCESS_INVOLVED):
         return nopermission(request)
+    
+    user_can_export = has_access(request.user, event, ACCESS_EVENT_EXPORT_HELPERS)
 
     # list of days with shifts
     days = Shift.objects.filter(job__event=event) \
@@ -37,7 +40,8 @@ def helpers(request, event_url_name):
 
     # overview over jobs
     context = {'event': event,
-               'days': days}
+               'days': days,
+               'user_can_export': user_can_export}
     return render(request, 'registration/admin/helpers.html', context)
 
 
@@ -49,7 +53,7 @@ def helpers_for_job(request, event_url_name, job_pk):
     if not has_access(request.user, job, ACCESS_JOB_VIEW_HELPERS):
         return nopermission(request)
 
-    is_admin = event.is_admin(request.user)
+    user_manages_attendance = has_access(request.user, event, ACCESS_GIFTS_HANDLE)
 
     shifts_by_day = job.shifts_by_day().items()
 
@@ -57,7 +61,7 @@ def helpers_for_job(request, event_url_name, job_pk):
     context = {'event': event,
                 'job': job,
                 'shifts_by_day': shifts_by_day,
-                'is_admin': is_admin}
+                'user_manages_attendance': user_manages_attendance}
     return render(request, 'registration/admin/helpers_for_job.html',
                     context)
 
@@ -68,8 +72,8 @@ def view_helper(request, event_url_name, helper_pk):
     if not has_access(request.user, helper, ACCESS_HELPER_VIEW):
         return nopermission(request)
 
-    edit_badge = event.badges and event.is_admin(request.user)  # FIXME
-    edit_gifts = event.gifts and event.is_admin(request.user)  # FIXME
+    edit_badge = event.badges and has_access(request.user, event, ACCESS_BADGES_EDIT_HELPER)
+    edit_gifts = event.gifts and has_access(request.user, event, ACCESS_GIFTS_HANDLE)
 
     gifts_form = None
     if edit_gifts:
@@ -201,7 +205,7 @@ def add_helper_to_shift(request, event_url_name, helper_pk):
     event, job, shift, helper = get_or_404(event_url_name, helper_pk=helper_pk)
 
     # check permission
-    if not event.is_involved(request.user):  # FIXME
+    if not has_access_event_or_job(request.user, event, None, ACCESS_JOB_EDIT_HELPERS):
         return nopermission(request)
 
     form = HelperAddShiftForm(request.POST or None, helper=helper,
@@ -233,7 +237,7 @@ def add_helper_as_coordinator(request, event_url_name, helper_pk):
     event, job, shift, helper = get_or_404(event_url_name, helper_pk=helper_pk)
 
     # check permission
-    if not event.is_involved(request.user):  # FIXME
+    if not has_access_event_or_job(request.user, event, None, ACCESS_JOB_EDIT_HELPERS):
         return nopermission(request)
 
     form = HelperAddCoordinatorForm(request.POST or None, helper=helper,
