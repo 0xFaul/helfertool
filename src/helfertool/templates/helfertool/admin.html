@@ -59,6 +59,10 @@
             {# for event #}
             {% is_involved event as involved %}
             {% if event and involved %}
+                {% has_access event "ACCESS_EVENT_EDIT" as user_event_edit %}
+                {% has_access event "ACCESS_EVENT_EDIT_JOBS" as user_event_edit_jobs %}
+                {% has_access event "ACCESS_EVENT_EDIT_LINKS" as user_event_edit_links %}
+
                 <h2>{% trans "General" %}</h2>
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -68,21 +72,27 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'edit_event' event.url_name %}">{% trans "Edit event" %}</a>
-                    </li>
+                    {% if user_event_edit %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'edit_event' event.url_name %}">{% trans "Edit event" %}</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'edit_event_admins' event.url_name %}">{% trans "Event permissions" %}</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'edit_event_admins' event.url_name %}">{% trans "Event permissions" %}</a>
+                        </li>
+                    {% endif %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'jobs_and_shifts' event.url_name %}">{% trans "Jobs and shifts" %}</a>
-                    </li>
+                    {% if user_event_edit_jobs %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'jobs_and_shifts' event.url_name %}">{% trans "Jobs and shifts" %}</a>
+                        </li>
+                    {% endif %}
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'links' event.url_name %}">{% trans "Links" %}</a>
-                    </li>
+                    {% if user_event_edit_links %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'links' event.url_name %}">{% trans "Links" %}</a>
+                        </li>
+                    {% endif %}
                 </ul>
 
                 <h2>{% trans "Helpers" %}</h2>

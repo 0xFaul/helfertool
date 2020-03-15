@@ -9,37 +9,37 @@ from django.utils.translation import ugettext_lazy as _
 # There are different roles, defined in registration.models.EventAdminRoles
 
 # In the views, a certain access is requested.
-ACCESS_INVOLVED = "INVOLVED"  # basically just the main page (user is somehow involved, necessary for all roles)
-ACCESS_EVENT_EDIT = "EVENT_EDIT"  # edit/archive/delete the event
-ACCESS_EVENT_EDIT_LINKS = "EVENT_EDIT_LINKS"  # edit links of an event
-ACCESS_EVENT_EDIT_JOBS = "EVENT_EDIT_JOBS"  # add/delete/duplicate/sort jobs
-ACCESS_EVENT_EXPORT_HELPERS = "EVENT_EXPORT_HELPERS"  # export data as pdf/excel
-ACCESS_EVENT_EDIT_DUPLICATES = "EVENT_EDIT_DUPLICATES"  # manage duplicated helpers
+ACCESS_INVOLVED = "ACCESS_INVOLVED"  # basically just the main page (user is somehow involved, necessary for all roles)
+ACCESS_EVENT_EDIT = "ACCESS_EVENT_EDIT"  # edit/archive/delete the event
+ACCESS_EVENT_EDIT_LINKS = "ACCESS_EVENT_EDIT_LINKS"  # edit links of an event
+ACCESS_EVENT_EDIT_JOBS = "ACCESS_EVENT_EDIT_JOBS"  # add/delete/duplicate/sort jobs
+ACCESS_EVENT_EXPORT_HELPERS = "ACCESS_EVENT_EXPORT_HELPERS"  # export data as pdf/excel
+ACCESS_EVENT_EDIT_DUPLICATES = "ACCESS_EVENT_EDIT_DUPLICATES"  # manage duplicated helpers
 
-ACCESS_JOB_EDIT = "JOB_EDIT"  # edit an existing job
-ACCESS_JOB_EDIT_HELPERS = "JOB_EDIT_HELPERS"  # add/remove helpers of job
-ACCESS_JOB_VIEW_HELPERS = "JOB_VIEW_HELPERS"  # view helpers of job
-ACCESS_JOB_SEND_MAILS = "JOB_SEND_MAILS"  # send mails for job
-ACCESS_JOB_VIEW_MAILS = "JOB_VIEW_MAILS"  # view sent mails for job
-ACCESS_JOB_VIEW_STATISTICS = "JOB_VIEW_STATISTICS"  # view statistics for job (currently for t-shirts)
+ACCESS_JOB_EDIT = "ACCESS_JOB_EDIT"  # edit an existing job
+ACCESS_JOB_EDIT_HELPERS = "ACCESS_JOB_EDIT_HELPERS"  # add/remove helpers of job
+ACCESS_JOB_VIEW_HELPERS = "ACCESS_JOB_VIEW_HELPERS"  # view helpers of job
+ACCESS_JOB_SEND_MAILS = "ACCESS_JOB_SEND_MAILS"  # send mails for job
+ACCESS_JOB_VIEW_MAILS = "ACCESS_JOB_VIEW_MAILS"  # view sent mails for job
+ACCESS_JOB_VIEW_STATISTICS = "ACCESS_JOB_VIEW_STATISTICS"  # view statistics for job (currently for t-shirts)
 
-ACCESS_HELPER_EDIT = "HELPER_EDIT"  # edit the personal data of a helper
-ACCESS_HELPER_VIEW = "HELPER_VIEW"  # view the personal data of a helper
+ACCESS_HELPER_EDIT = "ACCESS_HELPER_EDIT"  # edit the personal data of a helper
+ACCESS_HELPER_VIEW = "ACCESS_HELPER_VIEW"  # view the personal data of a helper
 
-ACCESS_INVENTORY_EDIT = "INVENTORY_EDIT"  # edit inventory settings for an event
-ACCESS_INVENTORY_HANDLE = "INVENTORY_HANDLE"  # register and take back inventory
+ACCESS_INVENTORY_EDIT = "ACCESS_INVENTORY_EDIT"  # edit inventory settings for an event
+ACCESS_INVENTORY_HANDLE = "ACCESS_INVENTORY_HANDLE"  # register and take back inventory
 
-ACCESS_BADGES_EDIT = "BADGES_EDIT"  # edit badge settings for an event
-ACCESS_BADGES_EDIT_HELPER = "BADGES_EDIT_HELPER"  # edit badges of single helpers
-ACCESS_BADGES_GENERATE = "BADGES_GENERATE"  # generate and register badges
+ACCESS_BADGES_EDIT = "ACCESS_BADGES_EDIT"  # edit badge settings for an event
+ACCESS_BADGES_EDIT_HELPER = "ACCESS_BADGES_EDIT_HELPER"  # edit badges of single helpers
+ACCESS_BADGES_GENERATE = "ACCESS_BADGES_GENERATE"  # generate and register badges
 
-ACCESS_MAILS_SEND = "MAILS_SEND"  # can send all mails of an event
-ACCESS_MAILS_VIEW = "MAILS_VIEW"  # can view all mails of an event
+ACCESS_MAILS_SEND = "ACCESS_MAILS_SEND"  # can send all mails of an event
+ACCESS_MAILS_VIEW = "ACCESS_MAILS_VIEW"  # can view all mails of an event
 
-ACCESS_STATISTICS_VIEW = "STATISTICS_VIEW"  # can view statistics
+ACCESS_STATISTICS_VIEW = "ACCESS_STATISTICS_VIEW"  # can view statistics
 
-ACCESS_GIFTS_EDIT = "GIFTS_EDIT"  # edit gift settings for an event
-ACCESS_GIFTS_HANDLE = "GIFTS_HANDLE"  # give gifts to helpers and note presence
+ACCESS_GIFTS_EDIT = "ACCESS_GIFTS_EDIT"  # edit gift settings for an event
+ACCESS_GIFTS_HANDLE = "ACCESS_GIFTS_HANDLE"  # give gifts to helpers and note presence
 
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
