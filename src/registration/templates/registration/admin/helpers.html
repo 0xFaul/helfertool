@@ -65,8 +65,6 @@
         {% endif %}
 
         {% for job in event.job_set.all %}
-            {% is_job_admin job as job_admin %}
-
             <h3>
                 {{ job.name }}
 
@@ -77,7 +75,7 @@
                 {% endif %}
             </h3>
 
-            {% if job_admin and not event.archived%}
+            {% if not event.archived %}
                 <p>
                     <a href="{% url 'helpers_for_job' event.url_name job.pk %}">
                     {% icon "info-circle" %}
