@@ -6,8 +6,8 @@ from django.shortcuts import render, get_object_or_404
 
 from ..forms import BadgeSettingsForm, BadgeDefaultsForm, BadgeJobDefaultsForm
 
-from registration.views.utils import nopermission, is_involved
 from registration.models import Event
+from registration.views.utils import nopermission
 from registration.permissions import has_access, ACCESS_BADGES_EDIT
 
 from .utils import notactive

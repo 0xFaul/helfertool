@@ -38,6 +38,9 @@ ACCESS_MAILS_VIEW = "MAILS_VIEW"  # can view all mails of an event
 
 ACCESS_STATISTICS_VIEW = "STATISTICS_VIEW"  # can view statistics
 
+ACCESS_GIFTS_EDIT = "GIFTS_EDIT"  # edit gift settings for an event
+ACCESS_GIFTS_HANDLE = "GIFTS_HANDLE"  # give gifts to helpers and note presence
+
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
 _rbac_matrix = {
@@ -152,7 +155,18 @@ _rbac_matrix = {
     ACCESS_STATISTICS_VIEW: [
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
-    ]
+    ],
+
+    ACCESS_GIFTS_EDIT: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
+    ACCESS_GIFTS_HANDLE: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+        EventAdminRoles.ROLE_FRONTDESK,
+    ],
 }
 
 
