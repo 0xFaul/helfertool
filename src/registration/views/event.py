@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 import logging
 logger = logging.getLogger("helfertool")
 
-from account.templatetags.permissions import has_addevent_group
+from account.templatetags.globalpermissions import has_addevent_group
 
 from .utils import is_admin, nopermission
 

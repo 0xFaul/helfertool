@@ -21,6 +21,7 @@ ACCESS_JOB_EDIT_HELPERS = "JOB_EDIT_HELPERS"  # add/remove helpers of job
 ACCESS_JOB_VIEW_HELPERS = "JOB_VIEW_HELPERS"  # view helpers of job
 ACCESS_JOB_SEND_MAILS = "JOB_SEND_MAILS"  # send mails for job
 ACCESS_JOB_VIEW_MAILS = "JOB_VIEW_MAILS"  # view sent mails for job
+ACCESS_JOB_VIEW_STATISTICS = "JOB_VIEW_STATISTICS"  # view statistics for job (currently for t-shirts)
 
 ACCESS_HELPER_EDIT = "HELPER_EDIT"  # edit the personal data of a helper
 ACCESS_HELPER_VIEW = "HELPER_VIEW"  # view the personal data of a helper
@@ -34,6 +35,8 @@ ACCESS_BADGES_GENERATE = "BADGES_GENERATE"  # generate and register badges
 
 ACCESS_MAILS_SEND = "MAILS_SEND"  # can send all mails of an event
 ACCESS_MAILS_VIEW = "MAILS_VIEW"  # can view all mails of an event
+
+ACCESS_STATISTICS_VIEW = "STATISTICS_VIEW"  # can view statistics
 
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
@@ -94,6 +97,11 @@ _rbac_matrix = {
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
     ],
 
+    ACCESS_JOB_VIEW_STATISTICS: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
     ACCESS_HELPER_EDIT: [
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
@@ -140,6 +148,11 @@ _rbac_matrix = {
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
     ],
+
+    ACCESS_STATISTICS_VIEW: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ]
 }
 
 
@@ -153,18 +166,31 @@ def has_access(user, resource, access):
 
     # check type of accessed resource
     if isinstance(resource, Event):
-        return has_access_event(user, resource, access)
+        return _has_access_event(user, resource, access)
     elif isinstance(resource, Job):
-        return has_access_job(user, resource, access)
+        return _has_access_job(user, resource, access)
     elif isinstance(resource, Helper):
-        return has_access_helper(user, resource, access)
+        return _has_access_helper(user, resource, access)
     else:
         raise ValueError("Invalid resource type")
     
     return False
 
 
-def has_access_event(user, event, access):
+def has_access_event_or_job(user, event, access_event, access_job):
+    # check event
+    if has_access(user, event, access_event):
+        return True
+
+    # check jobs
+    for job in event.job_set.all():
+        if has_access(user, job, access_job):
+            return True
+    
+    return False
+
+
+def _has_access_event(user, event, access):
     # check role
     if _check_event_role(user, event, access):
         return True
@@ -179,7 +205,7 @@ def has_access_event(user, event, access):
     return False
 
 
-def has_access_job(user, job, access):
+def _has_access_job(user, job, access):
     # check role
     if _check_event_role(user, job.event, access):
         return True
@@ -191,7 +217,7 @@ def has_access_job(user, job, access):
     return False
 
 
-def has_access_helper(user, helper, access):
+def _has_access_helper(user, helper, access):
     # check role
     if _check_event_role(user, helper.event, access):
         return True

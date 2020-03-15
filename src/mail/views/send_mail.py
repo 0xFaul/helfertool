@@ -13,7 +13,7 @@ logger = logging.getLogger("helfertool")
 from registration.decorators import archived_not_available
 from registration.models import Event
 from registration.views.utils import nopermission
-from registration.permissions import has_access, ACCESS_MAILS_SEND, ACCESS_JOB_SEND_MAILS
+from registration.permissions import has_access_event_or_job, ACCESS_MAILS_SEND, ACCESS_JOB_SEND_MAILS
 
 from ..forms import MailForm, MailFormError
 
@@ -24,15 +24,7 @@ def send_mail(request, event_url_name):
     event = get_object_or_404(Event, url_name=event_url_name)
 
     # check permission
-    can_send_mails = has_access(request.user, event, ACCESS_MAILS_SEND)
-    if not can_send_mails:
-        # maybe user can send mails for single job
-        for job in event.job_set.all():
-            if has_access(request.user, job, ACCESS_JOB_SEND_MAILS):
-                can_send_mails = True
-                break
-
-    if not can_send_mails:
+    if not has_access_event_or_job(request.user, event, ACCESS_MAILS_SEND, ACCESS_JOB_SEND_MAILS):
         return nopermission(request)
 
     # form
