@@ -19,6 +19,8 @@ ACCESS_EVENT_EDIT_DUPLICATES = "EVENT_EDIT_DUPLICATES"  # manage duplicated help
 ACCESS_JOB_EDIT = "JOB_EDIT"  # edit an existing job
 ACCESS_JOB_EDIT_HELPERS = "JOB_EDIT_HELPERS"  # add/remove helpers of job
 ACCESS_JOB_VIEW_HELPERS = "JOB_VIEW_HELPERS"  # view helpers of job
+ACCESS_JOB_SEND_MAILS = "JOB_SEND_MAILS"  # send mails for job
+ACCESS_JOB_VIEW_MAILS = "JOB_VIEW_MAILS"  # view sent mails for job
 
 ACCESS_HELPER_EDIT = "HELPER_EDIT"  # edit the personal data of a helper
 ACCESS_HELPER_VIEW = "HELPER_VIEW"  # view the personal data of a helper
@@ -29,6 +31,9 @@ ACCESS_INVENTORY_HANDLE = "INVENTORY_HANDLE"  # register and take back inventory
 ACCESS_BADGES_EDIT = "BADGES_EDIT"  # edit badge settings for an event
 ACCESS_BADGES_EDIT_HELPER = "BADGES_EDIT_HELPER"  # edit badges of single helpers
 ACCESS_BADGES_GENERATE = "BADGES_GENERATE"  # generate and register badges
+
+ACCESS_MAILS_SEND = "MAILS_SEND"  # can send all mails of an event
+ACCESS_MAILS_VIEW = "MAILS_VIEW"  # can view all mails of an event
 
 # Based on requested access and role, we can decide whether we grant access or not.
 # Here, for each access type, the allowed/required roles are listed.
@@ -79,6 +84,16 @@ _rbac_matrix = {
         EventAdminRoles.ROLE_INVENTORY,
     ],
 
+    ACCESS_JOB_SEND_MAILS: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
+    ACCESS_JOB_VIEW_MAILS: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
     ACCESS_HELPER_EDIT: [
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
@@ -114,6 +129,16 @@ _rbac_matrix = {
         EventAdminRoles.ROLE_ADMIN,
         EventAdminRoles.ROLE_RESTRICTED_ADMIN,
         EventAdminRoles.ROLE_BADGES,
+    ],
+
+    ACCESS_MAILS_SEND: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
+    ],
+
+    ACCESS_MAILS_VIEW: [
+        EventAdminRoles.ROLE_ADMIN,
+        EventAdminRoles.ROLE_RESTRICTED_ADMIN,
     ],
 }
 

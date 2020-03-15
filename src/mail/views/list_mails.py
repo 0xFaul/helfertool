@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 
 from registration.models import Event
 from registration.views.utils import nopermission
+from registration.permissions import has_access, ACCESS_INVOLVED
 
 from ..models import SentMail
 
@@ -11,8 +12,8 @@ from ..models import SentMail
 def list_mails(request, event_url_name):
     event = get_object_or_404(Event, url_name=event_url_name)
 
-    # check permission
-    if not event.is_involved(request.user):
+    # check permission, more fine-granular permission checks are made lateron
+    if not has_access(request.user, event, ACCESS_INVOLVED):
         return nopermission(request)
 
     all_sent_mails = SentMail.objects.filter(event=event)

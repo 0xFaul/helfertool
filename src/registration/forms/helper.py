@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from ..models import Helper, Shift, Job
+from ..permissions import has_access, ACCESS_HELPER_VIEW
 from badges.models import Badge
 
 
@@ -245,7 +246,7 @@ class HelperSearchForm(forms.Form):
         except Badge.DoesNotExist:
             return None
 
-        if badge.helper.can_edit(self.user):
+        if has_access(request.user, helper, ACCESS_HELPER_VIEW):
             return badge.helper
 
         return None
@@ -257,7 +258,7 @@ class HelperSearchForm(forms.Form):
                                             Q(surname__icontains=p) |
                                             Q(email__icontains=p) |
                                             Q(phone__icontains=p))
-        data = filter(lambda h: h.can_edit(self.user), data)
+        data = filter(lambda h: has_access(self.user, h, ACCESS_HELPER_VIEW), data)
 
         return data
 
